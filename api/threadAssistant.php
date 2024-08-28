@@ -2,11 +2,11 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 
-// use Dotenv\Dotenv;
+use Dotenv\Dotenv;
 use Orhanerday\OpenAi\OpenAi;
 
-// $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
-// $dotenv->load();
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 
 class OpenAIController
 {
@@ -14,8 +14,8 @@ class OpenAIController
 
     public function __construct()
     {
-        // $this->openai = new OpenAi($_ENV['OPENAI_API_KEY']);
-        $this->openai = new OpenAi(getenv('OPENAI_API_KEY'));
+        $this->openai = new OpenAi($_ENV['OPENAI_API_KEY']);
+        //$this->openai = new OpenAi(getenv('OPENAI_API_KEY'));
     }
 
     public function post()
@@ -130,8 +130,8 @@ class OpenAIController
         }
 
         try {
-            // $assistantId = $_ENV['ASSISTANT_ID'];
-            $assistantId = getenv('ASSISTANT_ID');
+            $assistantId = $_ENV['ASSISTANT_ID'];
+            //$assistantId = getenv('ASSISTANT_ID');
             $data = ['assistant_id' => $assistantId];
             $runResponse = $this->openai->createRun($threadId, $data);
             $run = json_decode($runResponse, true);
