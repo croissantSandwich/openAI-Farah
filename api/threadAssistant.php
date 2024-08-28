@@ -1,12 +1,14 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+/* For local development using environment variables */
+// use Dotenv\Dotenv;
 
-use Dotenv\Dotenv;
 use Orhanerday\OpenAi\OpenAi;
 
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+/* For local development using environment variables */
+// $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+// $dotenv->load();
 
 class OpenAIController
 {
@@ -14,8 +16,12 @@ class OpenAIController
 
     public function __construct()
     {
-        $this->openai = new OpenAi($_ENV['OPENAI_API_KEY']);
-        //$this->openai = new OpenAi(getenv('OPENAI_API_KEY'));
+        /* For local development using environment variables */
+        // $this->openai = new OpenAi($_ENV['OPENAI_API_KEY']);
+        $this->openai = new OpenAi(getenv('OPENAI_API_KEY'));
+        if (!$this->openai) {
+            throw new \Exception('OpenAI API key is required');
+        }
     }
 
     public function post()
@@ -100,21 +106,6 @@ class OpenAIController
         }
 
         return $run;
-        // while (true) {
-        //     usleep(5000000); // 5000ms delay
-
-        //     $runResponse = $this->openai->retrieveRun($threadId, $runId);
-        //     $run = json_decode($runResponse, true);
-
-        //     if (!in_array($run['status'], ['queued', 'in_progress'])) {
-        //         if (in_array($run['status'], ['cancelled', 'cancelling', 'failed', 'expired'])) {
-        //             throw new \Exception($run['status']);
-        //         }
-        //         break;
-        //     }
-        // }
-
-        // return $run;
     }
 
     public function runAssistant()
@@ -130,8 +121,9 @@ class OpenAIController
         }
 
         try {
-            $assistantId = $_ENV['ASSISTANT_ID'];
-            //$assistantId = getenv('ASSISTANT_ID');
+            /* For local development using environment variables */
+            // $assistantId = $_ENV['ASSISTANT_ID'];
+            $assistantId = getenv('ASSISTANT_ID');
             $data = ['assistant_id' => $assistantId];
             $runResponse = $this->openai->createRun($threadId, $data);
             $run = json_decode($runResponse, true);
